@@ -1067,6 +1067,9 @@ class Vs2010Backend(backends.Backend):
         extra_link_args += compiler.get_option_link_args(self.environment.coredata.compiler_options)
         (additional_libpaths, additional_links, extra_link_args) = self.split_link_args(extra_link_args.to_native())
 
+        unquoted_args, _ =  self.get_export_symbol_file_args(compiler, target, absolute_paths=True)
+        extra_link_args += ['"{}"'.format(x) for x in unquoted_args]
+
         # Add more libraries to be linked if needed
         for t in target.get_dependencies():
             lobj = self.build.targets[t.get_id()]

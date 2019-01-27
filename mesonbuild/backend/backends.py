@@ -1208,3 +1208,22 @@ class Backend:
             }]
 
         return []
+
+    def get_export_symbol_file_args(self, linker, target, *, absolute_paths=False):
+        args = []
+        dep_files = []
+        for f in target.symbol_export_files:
+            if isinstance(f, File):
+                relpath = f.rel_to_builddir(self.build_to_src)
+            elif isinstance(f, build.CustomTarget):
+                relpath = self.get_target_filename(f)
+            else:
+                raise RuntimeError('Broken, please file a bug.')
+            if absolute_paths:
+                final_path = os.path.join(self.build_dir, relpath)
+            else:
+                final_path = relpath
+            args += linker.get_symbol_export_file_args(final_path)
+            dep_files.append(relpath)
+        return (args, dep_files)
+

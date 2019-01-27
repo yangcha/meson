@@ -2427,20 +2427,6 @@ rule FORTRAN_DEP_HACK%s
 
         return guessed_dependencies + absolute_libs
 
-    def get_export_symbol_file_args(self, linker, target):
-        args = []
-        dep_files = []
-        for f in target.symbol_export_files:
-            if isinstance(f, File):
-                relpath = f.rel_to_builddir(self.build_to_src)
-            elif isinstance(f, build.CustomTarget):
-                relpath = self.get_target_filename(f)
-            else:
-                raise RuntimeError('Broken, please file a bug.')
-            args += linker.get_symbol_export_file_args(relpath)
-            dep_files.append(relpath)
-        return (args, dep_files)
-
     def generate_link(self, target, outfile, outname, obj_list, linker, extra_args=[], stdlib_args=[]):
         if isinstance(target, build.StaticLibrary):
             linker_base = 'STATIC'
