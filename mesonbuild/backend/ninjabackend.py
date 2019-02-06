@@ -139,7 +139,7 @@ class NinjaBuildElement:
     def check_outputs(self):
         for n in self.outfilenames:
             if n in self.all_outputs:
-                raise MesonException('Multiple producers for Ninja target "%s". Please rename your targets.' % n)
+                print('Multiple producers for Ninja target "%s". Please rename your targets.' % n)
             self.all_outputs[n] = True
 
 class NinjaBackend(backends.Backend):

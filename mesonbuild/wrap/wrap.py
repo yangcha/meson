@@ -110,6 +110,7 @@ class Resolver:
         self.wrap_mode = wrap_mode
         self.subdir_root = subdir_root
         self.cachedir = os.path.join(self.subdir_root, 'packagecache')
+        self.script_path = os.path.dirname(os.path.realpath(__file__))
 
     def resolve(self, packagename):
         self.packagename = packagename
@@ -222,8 +223,8 @@ class Resolver:
             subprocess.check_call(['git', 'clone', '--recursive', self.wrap.get('url'),
                                    self.directory], cwd=self.subdir_root)
         else:
-            subprocess.check_call(['git', 'clone', self.wrap.get('url'),
-                                   self.directory], cwd=self.subdir_root)
+            subprocess.check_call([sys.executable, os.path.join(self.script_path, 'git_retry.py'),
+                                   'clone', self.wrap.get('url'), self.directory], cwd=self.subdir_root)
         if revno.lower() != 'head':
             if subprocess.call(['git', 'checkout', revno], cwd=self.dirname) != 0:
                 subprocess.check_call(['git', 'fetch', self.wrap.get('url'), revno], cwd=self.dirname)
